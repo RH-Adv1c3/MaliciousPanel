@@ -1,0 +1,5 @@
+print('HEX Input: ')
+initString = input()
+hexstring = initString.replace("\\x","")
+newString = bytes.fromhex(hexstring)
+print('UTF-8 Output: ' + newString.decode('ascii'))
