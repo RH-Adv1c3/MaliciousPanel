@@ -1,5 +1,5 @@
 # MaliciousPanel
-Cipher Panel Research
+Cipher Panel Research (To clarify I have 0 connections to the group behind Cipher Panel, I'm merely researching this malicious panel for Cfx and server owners)
 
 With respect to @ericstolly's research, I have dug up more information and together with his research this repo has been created. 
 Mainly for information and educational purposes for server owners to figure out how what and where.
