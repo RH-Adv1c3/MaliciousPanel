@@ -6,6 +6,10 @@ Mainly for information and educational purposes for server owners to figure out 
 
 The several stages will be found in the files of this repo, there's also tools available (for now very limited) and a file which they infected. Don't worry it's only effective whenever you drop this file in the server files at the right position.
 
+Original Infection URL:
+`https://cipher-panel.me/_i/i.php?to=0`
+From this it goes through the several stages
+
 Explaination of the several stages:
 
 *Stage 1*: This stage is the "exploit" stage, just depends on what you want to name it. 
